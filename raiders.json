@@ -1,0 +1,64 @@
+{
+  "raiders": [
+    {
+      "rank": 1,
+      "name": "SnekMaster3000",
+      "raids": 487,
+      "avatar": null
+    },
+    {
+      "rank": 2,
+      "name": "RaidQueen99",
+      "raids": 412,
+      "avatar": null
+    },
+    {
+      "rank": 3,
+      "name": "Cobra_Strike",
+      "raids": 378,
+      "avatar": null
+    },
+    {
+      "rank": 4,
+      "name": "VenomViper",
+      "raids": 341,
+      "avatar": null
+    },
+    {
+      "rank": 5,
+      "name": "PythonProwler",
+      "raids": 299,
+      "avatar": null
+    },
+    {
+      "rank": 6,
+      "name": "AnacondaAce",
+      "raids": 265,
+      "avatar": null
+    },
+    {
+      "rank": 7,
+      "name": "SerpentSurge",
+      "raids": 241,
+      "avatar": null
+    },
+    {
+      "rank": 8,
+      "name": "Sidewinder_Sam",
+      "raids": 218,
+      "avatar": null
+    },
+    {
+      "rank": 9,
+      "name": "MambaRaider",
+      "raids": 196,
+      "avatar": null
+    },
+    {
+      "rank": 10,
+      "name": "TwilightBoa",
+      "raids": 174,
+      "avatar": null
+    }
+  ]
+}
