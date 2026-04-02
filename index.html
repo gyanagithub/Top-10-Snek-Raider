@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top 10 Snek Raiders – All Time</title>
+  <style>
+    /* ── Base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0d0f1a;
+      --surface:     #161929;
+      --surface2:    #1e2338;
+      --accent:      #7fff2a;
+      --accent2:     #3df7a0;
+      --gold:        #ffd700;
+      --silver:      #c0c0c0;
+      --bronze:      #cd7f32;
+      --text:        #e8ecf5;
+      --text-muted:  #7a86a8;
+      --border:      #2a3050;
+      --radius:      12px;
+      --radius-sm:   8px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .logo-snake {
+      font-size: 3.5rem;
+      line-height: 1;
+      display: block;
+      animation: wiggle 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px var(--accent));
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-5deg); }
+      50%       { transform: rotate(5deg); }
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.4rem;
+    }
+
+    .badge-alltime {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0d0f1a;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.2em 0.7em;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.6rem;
+    }
+
+    /* ── Card wrapper ────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 640px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+
+    .card-header {
+      background: var(--surface2);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-green  { background: var(--accent); }
+    .dot-blue   { background: #4fa3ff; }
+    .dot-purple { background: #a55fff; }
+
+    /* ── Leaderboard rows ────────────────────────────── */
+    .leaderboard { list-style: none; }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .row:last-child { border-bottom: none; }
+
+    .row:hover { background: var(--surface2); }
+
+    /* Podium glow */
+    .row[data-rank="1"] { background: rgba(255,215,0,0.05); }
+    .row[data-rank="2"] { background: rgba(192,192,192,0.04); }
+    .row[data-rank="3"] { background: rgba(205,127,50,0.04); }
+    .row[data-rank="1"]:hover { background: rgba(255,215,0,0.09); }
+    .row[data-rank="2"]:hover { background: rgba(192,192,192,0.08); }
+    .row[data-rank="3"]:hover { background: rgba(205,127,50,0.08); }
+
+    /* Accent bar on left edge */
+    .row[data-rank="1"]::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--gold); }
+    .row[data-rank="2"]::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--silver); }
+    .row[data-rank="3"]::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--bronze); }
+
+    /* ── Rank number / medal ─────────────────────────── */
+    .rank {
+      min-width: 2.2rem;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .rank-medal { font-size: 1.5rem; }
+
+    .rank-num {
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    /* ── Avatar ──────────────────────────────────────── */
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+    }
+
+    .avatar-placeholder {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--surface2), var(--border));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+    }
+
+    .row[data-rank="1"] .avatar,
+    .row[data-rank="1"] .avatar-placeholder { border-color: var(--gold); }
+    .row[data-rank="2"] .avatar,
+    .row[data-rank="2"] .avatar-placeholder { border-color: var(--silver); }
+    .row[data-rank="3"] .avatar,
+    .row[data-rank="3"] .avatar-placeholder { border-color: var(--bronze); }
+
+    /* ── Name + bar ──────────────────────────────────── */
+    .info { flex: 1; min-width: 0; }
+
+    .name {
+      font-weight: 700;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bar-wrap {
+      margin-top: 4px;
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Raid count ──────────────────────────────────── */
+    .raids {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .raids-count {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .raids-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Footer ──────────────────────────────────────── */
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Loading / error states ──────────────────────── */
+    .state-msg {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 480px) {
+      .row { padding: 0.75rem 1rem; gap: 0.75rem; }
+      .name { font-size: 0.9rem; }
+      .bar-wrap { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo-snake" role="img" aria-label="snake">🐍</span>
+  <h1>Top 10 Snek Raiders</h1>
+  <p class="subtitle">snekraids.com &mdash; Community Leaderboard</p>
+  <span class="badge-alltime">All Time</span>
+</header>
+
+<div class="card">
+  <div class="card-header">
+    <span class="dot dot-green"></span>
+    <span class="dot dot-blue"></span>
+    <span class="dot dot-purple"></span>
+    <span style="margin-left:0.5rem">Leaderboard &mdash; List View</span>
+  </div>
+
+  <ul class="leaderboard" id="leaderboard">
+    <li class="state-msg" id="loading">Loading raiders…</li>
+  </ul>
+</div>
+
+<footer>
+  Data sourced from <a href="https://snekraids.com/community" target="_blank" rel="noopener">snekraids.com/community</a>
+  &nbsp;·&nbsp;
+  Generated by <a href="https://github.com/gyanagithub/Top-10-Snek-Raider" target="_blank" rel="noopener">Top-10-Snek-Raider</a>
+</footer>
+
+<script>
+  const MEDALS = ['🥇', '🥈', '🥉'];
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+  }
+
+  function initials(name) {
+    return name.split(/[\s_-]+/).slice(0, 2).map(p => p[0] || '').join('').toUpperCase() || '?';
+  }
+
+  function buildPlaceholder(text) {
+    const d = document.createElement('div');
+    d.className = 'avatar-placeholder';
+    d.textContent = text;
+    return d;
+  }
+
+  function renderRow(raider, maxRaids) {
+    const { rank, name, raids, avatar } = raider;
+    const pct = maxRaids > 0 ? Math.round((raids / maxRaids) * 100) : 0;
+
+    const li = document.createElement('li');
+    li.className = 'row';
+    li.dataset.rank = rank;
+
+    // Rank / medal
+    const rankDiv = document.createElement('div');
+    rankDiv.className = 'rank';
+    if (rank <= 3) {
+      const span = document.createElement('span');
+      span.className = 'rank-medal';
+      span.textContent = MEDALS[rank - 1];
+      rankDiv.appendChild(span);
+    } else {
+      const span = document.createElement('span');
+      span.className = 'rank-num';
+      span.textContent = `#${rank}`;
+      rankDiv.appendChild(span);
+    }
+    li.appendChild(rankDiv);
+
+    // Avatar
+    if (avatar) {
+      const img = document.createElement('img');
+      img.className = 'avatar';
+      img.setAttribute('src', avatar);
+      img.setAttribute('alt', name);
+      img.setAttribute('loading', 'lazy');
+      const ini = initials(name);
+      img.addEventListener('error', function () { this.replaceWith(buildPlaceholder(ini)); });
+      li.appendChild(img);
+    } else {
+      li.appendChild(buildPlaceholder(initials(name)));
+    }
+
+    // Info: name + bar
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'info';
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'name';
+    nameDiv.textContent = name;
+    const barWrap = document.createElement('div');
+    barWrap.className = 'bar-wrap';
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.width = '0%';
+    bar.dataset.pct = pct;
+    barWrap.appendChild(bar);
+    infoDiv.appendChild(nameDiv);
+    infoDiv.appendChild(barWrap);
+    li.appendChild(infoDiv);
+
+    // Raids count
+    const raidsDiv = document.createElement('div');
+    raidsDiv.className = 'raids';
+    const countDiv = document.createElement('div');
+    countDiv.className = 'raids-count';
+    countDiv.textContent = raids.toLocaleString();
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'raids-label';
+    labelDiv.textContent = 'raids';
+    raidsDiv.appendChild(countDiv);
+    raidsDiv.appendChild(labelDiv);
+    li.appendChild(raidsDiv);
+
+    return li;
+  }
+
+  function animateBars() {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.bar').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    });
+  }
+
+  async function loadRaiders() {
+    const list = document.getElementById('leaderboard');
+
+    try {
+      // Try to load from raiders.json (same directory)
+      const resp = await fetch('raiders.json');
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      const raiders = data.raiders || data;
+
+      if (!raiders.length) throw new Error('Empty list');
+
+      const maxRaids = Math.max(...raiders.map(r => r.raids));
+      list.innerHTML = '';
+      raiders.slice(0, 10).forEach(r => list.appendChild(renderRow(r, maxRaids)));
+      setTimeout(animateBars, 100);
+
+    } catch (err) {
+      console.warn('Could not load raiders.json:', err.message);
+      // Fallback: hardcoded demo data embedded in page
+      loadDemoData(list);
+    }
+  }
+
+  function loadDemoData(list) {
+    const demo = [
+      { rank:  1, name: 'SnekMaster3000', raids: 487, avatar: null },
+      { rank:  2, name: 'RaidQueen99',    raids: 412, avatar: null },
+      { rank:  3, name: 'Cobra_Strike',   raids: 378, avatar: null },
+      { rank:  4, name: 'VenomViper',     raids: 341, avatar: null },
+      { rank:  5, name: 'PythonProwler',  raids: 299, avatar: null },
+      { rank:  6, name: 'AnacondaAce',    raids: 265, avatar: null },
+      { rank:  7, name: 'SerpentSurge',   raids: 241, avatar: null },
+      { rank:  8, name: 'Sidewinder_Sam', raids: 218, avatar: null },
+      { rank:  9, name: 'MambaRaider',    raids: 196, avatar: null },
+      { rank: 10, name: 'TwilightBoa',    raids: 174, avatar: null },
+    ];
+    const maxRaids = Math.max(...demo.map(r => r.raids));
+    list.innerHTML = '';
+    demo.forEach(r => list.appendChild(renderRow(r, maxRaids)));
+    setTimeout(animateBars, 100);
+  }
+
+  loadRaiders();
+</script>
+</body>
+</html>
